@@ -16,5 +16,6 @@ void cat_lista (nodo_t ** lista1, nodo_t * lista2);
 void limpiar_buffer (void);
 void crear_vector_punteros (nodo_t *** vec, int * cant);
 void llenar_vector_con_listas (nodo_t ** vec, int cant);
+void elim_cols (nodo_t ** vec, nodo_t ** vcols);
 
 #endif
