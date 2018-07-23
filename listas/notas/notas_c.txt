@@ -1,0 +1,19 @@
+#include "notas.h"
+#include <stdio.h>
+
+void enganchar (materia_t * vec, alumno_t ** prim2) {
+	alumno_t * actual;
+	alumno_t * actual2 = *prim2;
+	while (vec->prim) {
+		actual = vec->prim;
+		while (actual) {
+			if (actual->nota == 2) {
+				actual2 = actual;
+				actual2 = actual2->sig2;
+			}
+			actual = actual->sig;
+		}
+		vec++;
+	}
+	actual2 = NULL;
+}

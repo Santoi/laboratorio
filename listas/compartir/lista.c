@@ -4,13 +4,15 @@
 
 int main (void) {
 	int cant;
-	lista_t * vec;
+	lista_t * vec, cols [10];
 	size_t i;
 	crear_vector_punteros (&vec, &cant);
 	llenar_vector_con_listas (vec, cant);
-	list_bubble_sort (&vec, cant);
-	for (i = 0; i < cant; i++)
-		imprimir_lista (vec [i]);
+
+	//list_bubble_sort (&vec, cant);
+	recorrer_columnas (vec, cols, cant);
+	for (i = 0; i < largo_lista (vec [0]); i++)
+		imprimir_lista (cols [i]);
 	liberar_vector_punteros2listas (&vec, cant);
 
 	return EXIT_SUCCESS;
@@ -128,12 +130,8 @@ void llenar_vector_con_listas (nodo_t ** vec, int cant) {
 
 void liberar_vector_punteros2listas (lista_t ** vec, int cant) {
 	size_t i;
-	if (!vec || !(*vec)) {
-	}
-	else {
+	if (vec && *vec) {
 		for (i = 0; i < cant; i++) {
-			printf ("cant: %d\n i: %lu\n", cant, i);
-			printf ("vec[i]: %p\n", vec[i]);
 			liberar_lista (vec [i]);
 		}
 
@@ -145,17 +143,14 @@ void liberar_vector_punteros2listas (lista_t ** vec, int cant) {
 void liberar_lista (nodo_t ** lista) {
 	nodo_t * aux = NULL;
 	if (*lista) {
-		printf ("%p\t%p\n", lista, *lista);
-		puts ("liberando");
 		aux = (*lista)->sig;
 		free (*lista);
 		*lista = NULL;
 		liberar_lista (&aux);
 	}
-	puts ("lista liberada");
 }
 /* http://gzalo.com/algoritmos_kuhn/ */
-
+/*
 void elim_cols (nodo_t ** vec, nodo_t ** vcols) {
 	nodo_t * aux;
 	nodo_t * aux_cols;
@@ -200,32 +195,26 @@ void hallar_lista_min (lista_t * vec, int cant, lista_t * lista_min) {
 		cant--;
 	}
 }
-
+*/
 void list_bubble_sort (lista_t ** vec, int n) {
-	size_t cant = n;
-	printf ("Entra con: %p\n", vec);
-	printf ("n: %d\n", n);
+	int cant = n;
 	lista_t * aux = *vec;
 	if (vec && *vec) {
 		if (n > 1) {
 			while (cant > 1) {
-				printf ("%d\t%d\n", (*aux)->valor, (*(aux+1))->valor);
 				if (largo_lista (*aux) > largo_lista (*(aux+1))) {
 					swap (aux, aux+1);
-					puts ("intercambiados");
 				}
-				printf ("%p\n", aux);
 				cant--;
 				aux++;
 			}
-			printf ("Llamando con: %p\n", vec);
 			list_bubble_sort (vec, n-1);
 		}
 	}
 }
 
-size_t largo_lista (lista_t lista) {
-	size_t i = 0;
+int largo_lista (lista_t lista) {
+	int i = 0;
 	while (lista) {
 		lista = lista->sig;
 		i++;
@@ -239,3 +228,51 @@ void swap (lista_t * ptr1, lista_t * ptr2) {
 	*ptr1 = *ptr2;
 	*ptr2 = temp;
 }
+
+void recorrer_columnas (lista_t * vec, lista_t * cols, int n) {
+	size_t i, j;
+	lista_t aux_col, * aux_vec;
+	int cant;
+	aux_vec = vec;
+
+	while (1) {
+		j = 0;
+		for (i = 0; i < cant; i++) {
+			if (!largo_lista (vec [i]))
+				j++;
+		}
+		if (j >= n)
+			break;
+		*cols = *vec;
+		aux_col = *cols;
+		cant = n;
+
+		while (cant > 0) {
+			if (*vec) {
+				aux_col = *vec;
+				*vec = aux_col->sig;
+				vec++;
+				aux_col->sig = *vec;
+				aux_col = aux_col->sig;
+				cant--;
+			}
+			else {
+				vec++;
+				cant--;
+			}
+		}
+		cols++;
+		vec = aux_vec;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
