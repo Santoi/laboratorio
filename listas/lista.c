@@ -145,14 +145,11 @@ void liberar_vector_punteros2listas (lista_t ** vec, int cant) {
 void liberar_lista (nodo_t ** lista) {
 	nodo_t * aux = NULL;
 	if (*lista) {
-		printf ("%p\t%p\n", lista, *lista);
-		puts ("liberando");
 		aux = (*lista)->sig;
 		free (*lista);
 		*lista = NULL;
 		liberar_lista (&aux);
 	}
-	puts ("lista liberada");
 }
 /* http://gzalo.com/algoritmos_kuhn/ */
 
